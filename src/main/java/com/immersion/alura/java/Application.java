@@ -1,7 +1,6 @@
 package com.immersion.alura.java;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.immersion.alura.java.dto.MoviesDto;
 
@@ -28,47 +27,44 @@ public class Application {
 
     public static void main(String[] args) throws IOException {
         final var top250Url = getProperties().getProperty(URL_TO_250_MOVIES);
-        final var  mostPopularMovies = getProperties().getProperty(URL_MOST_POPULAR_MOVIES);
+        final var mostPopularMovies = getProperties().getProperty(URL_MOST_POPULAR_MOVIES);
 
         LOGGER.log(Level.INFO, "Request to IMD API to get Top 250 Movies");
         final var topMovies = getRequestIMDB(top250Url);
         final var movies = parseToMoviesDto(topMovies);
+        printRequest(movies);
 
-        movies.getItems().forEach(dto -> {
-             System.out.println("\u001b[1m\u001b[4mTitle: " + dto.getTitle() + "\u001b[0m");
-             System.out.println("\u001b[31mRank: " + dto.getRank() + "\u001b[0m");
-             System.out.println(dto.getBanner());
-             System.out.println("Rating: " + roundAndFormatRating(Optional.ofNullable(dto.getImDbRating().intValue())) + "\n");
-        });
-
-        LOGGER.log(Level.INFO, "Request to IMD API to get TOP MOST POPULAR MOVIES");
+        LOGGER.log(Level.INFO, "Request to IMD API to get Top Most Popular Movies");
         final var responseIMDB = getRequestIMDB(mostPopularMovies);
-        final var  moviesMostPopular = parseToMoviesDto(responseIMDB);
+        final var moviesMostPopular = parseToMoviesDto(responseIMDB);
+        printRequest(moviesMostPopular);
+    }
 
-        moviesMostPopular.getItems()
+    private static void printRequest(MoviesDto moviesDto) {
+        moviesDto.getItems()
                 .forEach(dto -> {
                     System.out.println("\u001b[1m\u001b[4mTitle: " + dto.getTitle() + "\u001b[0m");
                     System.out.println("\u001b[31mRank: " + dto.getRank() + "\u001b[0m");
                     System.out.println(dto.getBanner() + "\n");
-                   // System.out.println("Rating: " + roundAndFormatRating(Optional.ofNullable(dto.getImDbRating().intValue())) + "\n");
+                    System.out.println("Rating: " + roundAndFormatRating(dto.getImDbRating()) + "\n");
                 });
     }
 
-    private static String roundAndFormatRating(Optional<Integer> imDbRating) {
+    private static String roundAndFormatRating(Double imDbRating) {
         String ratingFormatted = "";
-        final BigDecimal bigDecimal = new BigDecimal(imDbRating.orElse(0)).setScale(0, RoundingMode.FLOOR);
+        final BigDecimal bigDecimal = BigDecimal.valueOf(Optional.ofNullable(imDbRating).orElse(1.0))
+                .setScale(0, RoundingMode.FLOOR);
 
-        for (int i = 0; i < bigDecimal.intValueExact() ; i++) {
-            ratingFormatted+= "\uD83C\uDF1F";
+        for (int i = 0; i < bigDecimal.intValueExact(); i++) {
+            ratingFormatted += "\uD83C\uDF1F";
         }
         return ratingFormatted;
     }
 
     private static MoviesDto parseToMoviesDto(String response) {
-         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
             return objectMapper.readValue(response, MoviesDto.class);
-        }catch (JsonProcessingException ex) {
+        } catch (JsonProcessingException ex) {
             throw new RuntimeException("Error to mapping URL to Java Object", ex.getCause());
         }
     }
@@ -82,18 +78,19 @@ public class Application {
                             .GET()
                             .build(), HttpResponse.BodyHandlers.ofString())
                     .body();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static Properties getProperties() throws IOException {
         final Properties properties = new Properties();
-        FileInputStream file = new FileInputStream("src/main/resources/application.properties");
-        properties.load(file);
-        return properties;
+        try (FileInputStream inputStream = new FileInputStream("src/main/resources/application.properties")) {
+            properties.load(inputStream);
+            return properties;
+        } catch (FileNotFoundException ex) {
+            throw new IOException("Not found file .properties", ex.getCause());
+        }
     }
 
 }
