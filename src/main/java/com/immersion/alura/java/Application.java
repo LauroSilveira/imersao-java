@@ -7,6 +7,7 @@ import com.immersion.alura.java.mapper.JacksonParser;
 import com.immersion.alura.java.model.Movie;
 import com.immersion.alura.java.model.Movies;
 import com.immersion.alura.java.model.NasaContent;
+import com.immersion.alura.java.model.enums.GetUrlEnum;
 import com.immersion.alura.java.service.HttpRequestService;
 
 import java.util.Optional;
@@ -21,19 +22,18 @@ public class Application {
     private static final ProcessData processData = new ProcessData();
     private static final JacksonParser jacksonParser = new JacksonParser();
     private static final StickerGenerator stickerGenerator = new StickerGenerator();
-    private static final String URL_TOP_250_MOVIES = "api.imdb.url-top-250-movies";
-    private static final String URL_MOST_POPULAR_MOVIES = "api.imdb.url-most-popular-movies";
-    private static final String IMDB_KEY = "api.imdb.user.key";
-
-    private static final String URL_MARVEL = "api.marvel.url-list-of-all.characters";
-    private static final String KEY_MARVEL = "api.marvel.user.key";
 
     public static void main(String[] args) {
-        final var top250Url = propertiesConfig.getProperties().getProperty(URL_TOP_250_MOVIES)
-                .concat(propertiesConfig.getProperties().getProperty(IMDB_KEY));
+        final var top250Url = propertiesConfig.getProperties().getProperty(GetUrlEnum.URL_TOP_250_MOVIES.getUrl())
+                + propertiesConfig.getProperties().get(GetUrlEnum.URL_TOP_250_MOVIES.getApiKey());
 
-        final var mostPopularMovies = propertiesConfig.getProperties().getProperty(URL_MOST_POPULAR_MOVIES)
-                .concat(propertiesConfig.getProperties().getProperty(IMDB_KEY));
+
+        final var mostPopularMoviesUrl = propertiesConfig.getProperties()
+                .getProperty(GetUrlEnum.URL_MOST_POPULAR_MOVIES.getUrl())
+                + propertiesConfig.getProperties().getProperty(GetUrlEnum.URL_MOST_POPULAR_MOVIES.getApiKey());
+
+        final var nasaUrl = propertiesConfig.getProperties().getProperty(GetUrlEnum.URL_ASTRONOMIC_DAY_NASA.getUrl())
+                + propertiesConfig.getProperties().getProperty(GetUrlEnum.URL_ASTRONOMIC_DAY_NASA.getApiKey());
 
         LOGGER.log(Level.INFO, "Request to IMD API to get Top 250 Movies");
         final var responseTopMovies = httpRequestService.getRequestIMDB(top250Url);
@@ -41,7 +41,7 @@ public class Application {
         processData.printRequest(movies);
 
         LOGGER.log(Level.INFO, "Request to IMD API to get Top Most Popular Movies");
-        final var responseMoviesPopular = httpRequestService.getRequestIMDB(mostPopularMovies);
+        final var responseMoviesPopular = httpRequestService.getRequestIMDB(mostPopularMoviesUrl);
         final var moviesMostPopular = jacksonParser.parseToJavaObject(responseMoviesPopular, Movies.class);
         processData.printRequest(moviesMostPopular);
 
@@ -55,7 +55,8 @@ public class Application {
         System.out.println("Marvel response JSon " + responseMarvelJson);*/
 
         LOGGER.log(Level.INFO, "Request to Nasa Api to get the day planet photo");
-        final String nasaResponse = httpRequestService.getNasaRequest("https://api.nasa.gov/planetary/apod?api_key=xgxTDgbHeohZtRXrnYCuFpKy1D7pfwKepi7cQKtD");
-        jacksonParser.parseToJavaObject(nasaResponse, NasaContent.class);
+        final String nasaResponse = httpRequestService.getNasaRequest(nasaUrl);
+        NasaContent nasaContent = jacksonParser.parseToJavaObject(nasaResponse, NasaContent.class);
+       // stickerGenerator.generatorSticker();
     }
 }
