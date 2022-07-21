@@ -18,7 +18,9 @@ public class Movie {
         return imDbRating;
     }
 
+    //Constructor necessary to object mapper Jackson
     public Movie() {
+
     }
     public Movie setImDbRating(Double imDbRating) {
         this.imDbRating = imDbRating;

@@ -10,9 +10,10 @@ public class Movies {
     @JsonProperty(value = "items")
     private List<Movie> items;
 
+    //Constructor necessary to object mapper Jackson
     public Movies() {
-    }
 
+    }
     public Movies(List<Movie> items) {
         this.items = items;
     }
