@@ -2,7 +2,9 @@ package com.immersion.alura.java;
 
 import com.immersion.alura.java.conf.PropertiesConfig;
 import com.immersion.alura.java.domain.ProcessData;
-import com.immersion.alura.java.domain.StickerGenerator;
+import com.immersion.alura.java.domain.StickerGeneratorDelegator;
+import com.immersion.alura.java.domain.StickerGeneratorIMDB;
+import com.immersion.alura.java.domain.StickerGeneratorNasa;
 import com.immersion.alura.java.mapper.JacksonParser;
 import com.immersion.alura.java.model.Movie;
 import com.immersion.alura.java.model.Movies;
@@ -21,8 +23,10 @@ public class Application {
     private static final HttpRequestService httpRequestService = new HttpRequestService();
     private static final ProcessData processData = new ProcessData();
     private static final JacksonParser jacksonParser = new JacksonParser();
-    private static final StickerGenerator stickerGenerator = new StickerGenerator();
 
+    //Patter Java Delegate
+    private static final StickerGeneratorDelegator stickerGeneratorIMDB = new StickerGeneratorDelegator(new StickerGeneratorIMDB());
+    private static final StickerGeneratorDelegator stickerGeneratorNasa = new StickerGeneratorDelegator(new StickerGeneratorNasa());
     public static void main(String[] args) {
         final var top250Url = propertiesConfig.getProperties().getProperty(GetUrlEnum.URL_TOP_250_MOVIES.getUrl())
                 + propertiesConfig.getProperties().get(GetUrlEnum.URL_TOP_250_MOVIES.getApiKey());
@@ -47,7 +51,7 @@ public class Application {
 
         LOGGER.log(Level.INFO, "Starting process to generate Sticker");
         final Optional<Movie> movie = moviesMostPopular.getItems().stream().findAny();
-        stickerGenerator.generatorSticker(movie);
+        stickerGeneratorIMDB.stickerGenerator(movie.get().getBanner(), movie.get().getTitle(), movie.get().getImDbRating());
 
 /*        LOGGER.log(Level.INFO, "Request to Marvel Api to get list of all characters");
         String responseMarvelJson = httpRequestService.getMarvelRequest(propertiesConfig.getProperties().getProperty(URL_MARVEL)
@@ -57,6 +61,7 @@ public class Application {
         LOGGER.log(Level.INFO, "Request to Nasa Api to get the day planet photo");
         final String nasaResponse = httpRequestService.getNasaRequest(nasaUrl);
         NasaContent nasaContent = jacksonParser.parseToJavaObject(nasaResponse, NasaContent.class);
-       // stickerGenerator.generatorSticker();
+        stickerGeneratorNasa.stickerGenerator(nasaContent.getUrlImage(), nasaContent.getTitle(), null);
+
     }
 }

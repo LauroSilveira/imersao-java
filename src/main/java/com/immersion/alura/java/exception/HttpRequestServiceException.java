@@ -1,7 +1,5 @@
 package com.immersion.alura.java.exception;
 
-import java.io.IOException;
-
 /**
  * Custom Exception HttpRequestService class
  */
