@@ -16,6 +16,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.immersion.alura.java.model.enums.GetUrlEnum.URL_MARVEL;
+
 public class Application {
 
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
@@ -53,15 +55,18 @@ public class Application {
         final Optional<Movie> movie = moviesMostPopular.getItems().stream().findAny();
         stickerGeneratorIMDB.stickerGenerator(movie.get().getBanner(), movie.get().getTitle(), movie.get().getImDbRating());
 
-/*        LOGGER.log(Level.INFO, "Request to Marvel Api to get list of all characters");
-        String responseMarvelJson = httpRequestService.getMarvelRequest(propertiesConfig.getProperties().getProperty(URL_MARVEL)
-                .concat(propertiesConfig.getProperties().getProperty(KEY_MARVEL)));
-        System.out.println("Marvel response JSon " + responseMarvelJson);*/
+        //TODO: Implement Marven endpoint
+/*
+        LOGGER.log(Level.INFO, "Request to Marvel Api to get list of all characters");
+        String responseMarvelJson = httpRequestService.getMarvelRequest(propertiesConfig.getProperties().getProperty(URL_MARVEL.getUrl())
+                .concat(propertiesConfig.getProperties().getProperty(GetUrlEnum.K)));
+        System.out.println("Marvel response JSon " + responseMarvelJson);
+*/
 
-        LOGGER.log(Level.INFO, "Request to Nasa Api to get the day planet photo");
+        LOGGER.log(Level.INFO, "Request to Nasa Api to get Astronomic Day Photo...");
         final String nasaResponse = httpRequestService.getNasaRequest(nasaUrl);
         NasaContent nasaContent = jacksonParser.parseToJavaObject(nasaResponse, NasaContent.class);
-        stickerGeneratorNasa.stickerGenerator(nasaContent.getUrlImage(), nasaContent.getTitle(), null);
+        stickerGeneratorNasa.stickerGenerator(nasaContent.urlImage(), nasaContent.title(), null);
 
     }
 }

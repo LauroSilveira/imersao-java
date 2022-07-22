@@ -29,7 +29,7 @@ public class HttpRequestService {
     }
 
     public String getMarvelRequest(String request) {
-        LOGGER.log(Level.INFO, "Request to Marvel API");
+        LOGGER.log(Level.INFO, "Request to Marvel API...");
         final HttpClient client = HttpClient.newBuilder().build();
         try {
             return client.send(HttpRequest.newBuilder()
@@ -44,7 +44,7 @@ public class HttpRequestService {
     }
 
     public String getNasaRequest(String request) {
-        LOGGER.log(Level.INFO, "Request to Marvel API");
+        LOGGER.log(Level.INFO, "Request to Marvel API...");
         final HttpClient client = HttpClient.newBuilder().build();
         try {
             return client.send(HttpRequest.newBuilder()
