@@ -16,17 +16,17 @@ import java.util.logging.Logger;
 
 import static java.awt.Transparency.TRANSLUCENT;
 
-/**
- * This Class implements Delegate Pattern
- */
-public class StickerGeneratorNasa implements StickerGenerator {
+public class StickerGeneratorLanguages implements StickerGenerator {
 
     public static final String OUTPUT = "src/main/resources/output";
-    private static final Logger LOGGER = Logger.getLogger(StickerGeneratorNasa.class.getName());
+
+    private static final Logger LOGGER = Logger.getLogger(StickerGeneratorLanguages.class.getName());
+
 
     @Override
     public void stickerGenerator(String url, String name, Double ranking) {
-        LOGGER.log(Level.INFO, "StickerGeneratorNasa creating Sticker...");
+
+        LOGGER.log(Level.INFO, "StickerGeneratorLanguages creating Sticker...");
         try {
             //create directory of images
             final File directory = new File(OUTPUT);
@@ -73,5 +73,6 @@ public class StickerGeneratorNasa implements StickerGenerator {
         } catch (IOException e) {
             throw new StickerGeneratorException("Error to read inputStream", e.getCause());
         }
+
     }
 }

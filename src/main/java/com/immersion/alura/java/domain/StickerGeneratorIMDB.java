@@ -24,14 +24,14 @@ public class StickerGeneratorIMDB implements StickerGenerator {
     public static final String OUTPUT = "src/main/resources/output";
 
     @Override
-    public void stickerGenerator(final String banner, final String movieTitle, final Double ratingIMBD) {
+    public void stickerGenerator(final String url, final String name, final Double ranking) {
         LOGGER.log(Level.INFO, "StickerGeneratorIMDB creating Sticker...");
         try {
             //create directory of images
             final File directory = new File(OUTPUT);
 
             //this get the real size of banner
-            final String bannerRealSize = banner.substring(0, banner.indexOf("._V1"));
+            final String bannerRealSize = url.substring(0, url.indexOf("._V1"));
             InputStream inputStream = new URL(bannerRealSize).openStream();
             BufferedImage originalImage = ImageIO.read(inputStream);
 
@@ -46,10 +46,10 @@ public class StickerGeneratorIMDB implements StickerGenerator {
 
             var font = new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 100);
             graphics.setFont(font);
-            graphics.setColor(changeTextColorByIMDBRating(ratingIMBD));
+            graphics.setColor(changeTextColorByIMDBRating(ranking));
 
             //Outline String
-            GlyphVector glyphVector = graphics.getFont().createGlyphVector(graphics.getFontRenderContext(), movieTitle);
+            GlyphVector glyphVector = graphics.getFont().createGlyphVector(graphics.getFontRenderContext(), name);
             Shape shape = glyphVector.getOutline();
 
             // activate anti aliasing for text rendering
@@ -69,7 +69,7 @@ public class StickerGeneratorIMDB implements StickerGenerator {
                 directory.mkdir();
                 LOGGER.log(Level.WARNING, "Directory directory does not exist, it will be create!");
             }
-            ImageIO.write(newImage, "png", new File(directory.getPath() + "/" + movieTitle + ".png"));
+            ImageIO.write(newImage, "png", new File(directory.getPath() + "/" + name + ".png"));
             LOGGER.log(Level.INFO, "Finished Sticker process!");
         } catch (IOException e) {
             throw new StickerGeneratorException("Error to read inputStream", e.getCause());

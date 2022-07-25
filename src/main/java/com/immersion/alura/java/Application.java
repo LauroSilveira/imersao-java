@@ -1,21 +1,19 @@
 package com.immersion.alura.java;
 
-import com.immersion.alura.java.domain.ProcessData;
-import com.immersion.alura.java.domain.StickerGeneratorDelegator;
-import com.immersion.alura.java.domain.StickerGeneratorIMDB;
-import com.immersion.alura.java.domain.StickerGeneratorNasa;
+import com.immersion.alura.java.domain.*;
 import com.immersion.alura.java.mapper.JacksonParser;
+import com.immersion.alura.java.model.Languages;
 import com.immersion.alura.java.model.Movie;
 import com.immersion.alura.java.model.Movies;
 import com.immersion.alura.java.model.NasaContent;
 import com.immersion.alura.java.service.HttpRequestService;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.immersion.alura.java.enums.EndpointsEnum.URL_MOST_POPULAR_MOVIES;
-import static com.immersion.alura.java.enums.EndpointsEnum.URL_TOP_250_MOVIES;
+import static com.immersion.alura.java.enums.EndpointsEnum.*;
 
 public class Application {
 
@@ -27,6 +25,7 @@ public class Application {
     //Patter Java Delegate
     private static final StickerGeneratorDelegator stickerGeneratorIMDB = new StickerGeneratorDelegator(new StickerGeneratorIMDB());
     private static final StickerGeneratorDelegator stickerGeneratorNasa = new StickerGeneratorDelegator(new StickerGeneratorNasa());
+    private static final StickerGeneratorDelegator stickerGeneratorLanguages = new StickerGeneratorDelegator(new StickerGeneratorLanguages());
 
     public static void main(String[] args) {
 
@@ -41,11 +40,12 @@ public class Application {
         processData.printRequest(moviesMostPopular);
 
         LOGGER.log(Level.INFO, "Starting process to generate Sticker");
-        final Optional<Movie> movie = moviesMostPopular.getItems().stream().findAny();
-        stickerGeneratorIMDB.stickerGenerator(movie.get().getBanner(), movie.get().getTitle(), movie.get().getImDbRating());
+        final List<Movie> movie = moviesMostPopular.getItems().stream().limit(5L).toList();
+        stickerGeneratorIMDB.stickerGenerator(movie.stream().findFirst().get().getBanner(), movie.stream().findFirst().get().getTitle(),
+                movie.stream().findFirst().get().getImDbRating());
 
         LOGGER.log(Level.INFO, "Request to Nasa Api to get Astronomic Day Photo...");
-        final String nasaResponse = httpRequestService.getNasaRequest(null);
+        final String nasaResponse = httpRequestService.getNasaRequest(URL_ASTRONOMIC_DAY_NASA.getEndpoint());
         NasaContent nasaContent = jacksonParser.parseToJavaObject(nasaResponse, NasaContent.class);
         stickerGeneratorNasa.stickerGenerator(nasaContent.urlImage(), nasaContent.title(), null);
 
@@ -56,6 +56,18 @@ public class Application {
                 .concat(propertiesConfig.getProperties().getProperty(EndpointsEnum.K)));
         System.out.println("Marvel response JSon " + responseMarvelJson);
 */
+        LOGGER.log(Level.INFO, "Request to API Rest programming language...");
+        String languagesJson = httpRequestService.getRequestIMDB(URL_LANGUAGE_API.getUrl());
+        List<Languages> languages = Arrays.asList(jacksonParser.parseToJavaObject(languagesJson, Languages[].class));
+        //TODO: refactor to another class
+        languages.forEach(language -> {
+            System.out.println("Id: " + language.getId());
+            System.out.println("Name: " + language.getName());
+            System.out.println("Url: " + language.getUrl());
+            System.out.println("Position: " + language.getPosition());
+        });
 
+        languages.forEach(l -> stickerGeneratorLanguages.stickerGenerator(l.getUrl(), l.getName(),
+                Double.parseDouble(l.getPosition())));
     }
 }

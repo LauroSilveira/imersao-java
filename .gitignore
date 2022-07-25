@@ -20,6 +20,7 @@ target/
 *.ipr
 .DS_Store
 *.png
+src/main/resources/output
 
 ### NetBeans ###
 /nbproject/private/
