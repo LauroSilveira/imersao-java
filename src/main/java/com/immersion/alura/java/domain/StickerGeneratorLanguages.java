@@ -19,9 +19,7 @@ import static java.awt.Transparency.TRANSLUCENT;
 public class StickerGeneratorLanguages implements StickerGenerator {
 
     public static final String OUTPUT = "src/main/resources/output";
-
     private static final Logger LOGGER = Logger.getLogger(StickerGeneratorLanguages.class.getName());
-
 
     @Override
     public void stickerGenerator(String url, String name, Double ranking) {
@@ -44,7 +42,7 @@ public class StickerGeneratorLanguages implements StickerGenerator {
             Graphics2D graphics = (Graphics2D) newImage.getGraphics();
             graphics.drawImage(originalImage, 0, 0, null);
 
-            var font = new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 90);
+            var font = new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 60);
             graphics.setFont(font);
 
             //Outline String
@@ -57,14 +55,14 @@ public class StickerGeneratorLanguages implements StickerGenerator {
             graphics.setRenderingHint(RenderingHints.KEY_RENDERING,
                     RenderingHints.VALUE_RENDER_QUALITY);
 
-            graphics.setStroke(new BasicStroke(15.0f));
-            graphics.translate(280, newHeight - 30);
+            graphics.setStroke(new BasicStroke(11.0f));
+            graphics.translate(70, newHeight - 130);
             graphics.setColor(Color.BLACK);
             graphics.draw(shape);
             graphics.setColor(Color.YELLOW);
             graphics.fill(shape);
 
-            if (directory.exists()) {
+            if (!directory.exists()) {
                 directory.mkdir();
                 LOGGER.log(Level.WARNING, "Directory directory does not exist, it will be create!");
             }

@@ -64,7 +64,7 @@ public class StickerGeneratorNasa implements StickerGenerator {
             graphics.setColor(Color.YELLOW);
             graphics.fill(shape);
 
-            if (directory.exists()) {
+            if (!directory.exists()) {
                 directory.mkdir();
                 LOGGER.log(Level.WARNING, "Directory directory does not exist, it will be create!");
             }
