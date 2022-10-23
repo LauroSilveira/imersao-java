@@ -10,7 +10,7 @@ public class StickerGeneratorDelegator implements StickerGenerator {
         this.stickerGenerator = stickerGenerator;
     }
     @Override
-    public void stickerGenerator(String url, String name, Double ranking) {
-        stickerGenerator.stickerGenerator(url, name, ranking);
+    public void stickerGenerator(String url, String name, Double ranking, boolean isSubDirectory) {
+        stickerGenerator.stickerGenerator(url, name, ranking, isSubDirectory);
     }
 }

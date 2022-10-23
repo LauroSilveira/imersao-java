@@ -2,9 +2,11 @@ package com.immersion.alura.java.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.immersion.alura.java.domain.ProcessData;
+import com.immersion.alura.java.exception.HttpRequestServiceException;
 import com.immersion.alura.java.model.Result;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 public class MarvelDeserializer {
@@ -21,7 +23,8 @@ public class MarvelDeserializer {
               .get("results")
               .spliterator(), false)
           .map(node -> Result.builder()
-              .name(node.get("name").asText())
+              .name(Optional.ofNullable(node.get("name")).isPresent() ? node.get("name").asText() :
+                  node.get("title").asText())
               .path(
                   String.format("%s.%s",
                       node.get("thumbnail").get("path").asText(),
@@ -33,7 +36,7 @@ public class MarvelDeserializer {
 
       return results;
     } catch (IOException e) {
-      throw new RuntimeException("MarvelDeserializer error to deserialize Commics object");
+      throw new HttpRequestServiceException("MarvelDeserializer error to deserialize Commics object", e.getCause());
     }
 
   }
