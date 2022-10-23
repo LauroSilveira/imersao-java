@@ -3,75 +3,58 @@ package com.immersion.alura.java.domain;
 import static java.awt.Transparency.TRANSLUCENT;
 
 import com.immersion.alura.java.exception.StickerGeneratorException;
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.font.GlyphVector;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import lombok.extern.slf4j.Slf4j;
 
-public class StickerGeneratorMarvel implements StickerGenerator{
+@Slf4j
+public class StickerGeneratorMarvel implements StickerGenerator {
 
-  private static final Logger LOGGER = Logger.getLogger(StickerGeneratorMarvel.class.getName());
-  public static final String OUTPUT = "src/main/resources/output";
+  public static final String OUTPUT_CHARACTERS = "src/main/resources/output/marvel/characters";
+  public static final String OUTPUT_COMICS = "src/main/resources/output/marvel/comics";
 
   @Override
-  public void stickerGenerator(String url, String name, Double ranking) {
-
-    LOGGER.log(Level.INFO, "StickerGeneratorMarvel creating Sticker...");
+  public void stickerGenerator(final String url, final String name, final Double ranking,
+      final boolean isSubDirectory) {
+    log.info("StickerGeneratorMarvel creating Sticker...");
     try {
       //create directory of images
-      final File directory = new File(OUTPUT);
+      File directory = null;
 
+      if (isSubDirectory) {
+        directory = new File(OUTPUT_COMICS);
+      } else {
+        directory = new File(OUTPUT_CHARACTERS);
+      }
+
+      if (!directory.exists() && directory.mkdirs()) {
+        log.warn("Directory Characters does not exist, it will be create!");
+      }
 
       InputStream inputStream = new URL(url).openStream();
       BufferedImage originalImage = ImageIO.read(inputStream);
 
-      int width = originalImage.getWidth();
-      int height = originalImage.getHeight();
-      int newHeight = height + 200;
+      final int width = originalImage.getWidth();
+      final int height = originalImage.getHeight();
+      final int newHeight = height + 200;
 
-      BufferedImage newImage = new BufferedImage(width, newHeight, TRANSLUCENT);
+      final BufferedImage newImage = new BufferedImage(width, newHeight, TRANSLUCENT);
 
       Graphics2D graphics = (Graphics2D) newImage.getGraphics();
       graphics.drawImage(originalImage, 0, 0, null);
 
-      var font = new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 90);
+      var font = new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 60);
       graphics.setFont(font);
 
-      //Outline String
-      GlyphVector glyphVector = graphics.getFont().createGlyphVector(graphics.getFontRenderContext(), name);
-      Shape shape = glyphVector.getOutline();
-
-      // activate anti aliasing for text rendering
-      graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-          RenderingHints.VALUE_ANTIALIAS_ON);
-      graphics.setRenderingHint(RenderingHints.KEY_RENDERING,
-          RenderingHints.VALUE_RENDER_QUALITY);
-
-      graphics.setStroke(new BasicStroke(15.0f));
-      graphics.translate(280, newHeight - 30);
-      graphics.setColor(Color.BLACK);
-      graphics.draw(shape);
-      graphics.setColor(Color.YELLOW);
-      graphics.fill(shape);
-
-      if (!directory.exists()) {
-        directory.mkdir();
-        LOGGER.log(Level.WARNING, "Directory directory does not exist, it will be create!");
-      }
-      ImageIO.write(newImage, "png", new FileOutputStream(directory.getPath() + "/" + name + ".png"));
-      LOGGER.log(Level.INFO, "Finished Sticker process!");
+      ImageIO.write(newImage, "png", new FileOutputStream(directory.getPath().concat("/") + name + ".png"));
+      log.info("Sticker process Finished!");
     } catch (IOException e) {
       throw new StickerGeneratorException("Error to read inputStream", e.getCause());
     }
