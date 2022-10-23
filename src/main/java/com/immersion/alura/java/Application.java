@@ -21,10 +21,8 @@ import com.immersion.alura.java.service.HttpRequestService;
 import java.net.URISyntaxException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @Slf4j
-@SpringBootApplication
 public class Application {
 
   private static final HttpRequestService httpRequestService = new HttpRequestService();
