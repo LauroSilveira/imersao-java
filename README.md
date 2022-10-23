@@ -40,35 +40,36 @@ Or Just click in Run in your favourite IDE.
 #### IMDB
 This application call the API from IMDB to retrieve the 250 top movies and classify them regard in their ranking. Some the results are:
 
-!["Top 250 popular movies"](docs/imdb/screenshot-top-250-popular-movies.png )
+![most popular 250 movies](data/imdb/screenshot-top-250-popular-movies.png)
 
 Also, another API is called to retrieve the most popular movies at the moment.
 One of the results is:
 
-![thor-love-and-thunder](docs/imdb/image-thor-love-and-thunder.png)
+![thor love and thunder](data/imdb/image-thor-love-and-thunder.png)
 
 After get all this information, this application is capable to generate Sticker with previous data.
-
-#### NASA
+ 
+## NASA
 Another API called is from NASA, this will retrieve the photo astronomic of the day.
 So every day is a new phot from a differente planete, and believe me, is amazing!
-![NASA](docs/nasa/Milky Way and Zodiacal Light over Australian Pinnacles.png)
 
-#### Marvel
+![nasa](data/nasa/nasa.png)
+
+## Marvel
 In case of Marvel the application calls two different endpoints, all characters and all comics.
 Some results from API characaters are:
 
-##### Result of Characters:
-![Abyss](docs/marvel/Abyss%20(Age%20of%20Apocalypse).png)
+## Result of Characters:
+![abomination](data/marvel/characters/Abomination_Emil_Blonsky.png)
 
-![abomination](docs/marvel/Abomination%20(Emil%20Blonsky).png)
+![apocalipse](data/marvel/characters/Abyss_Age_of_Apocalypse.png)
 
-##### Result of Comics:
-![](docs/marvel/comics/Marvel_Previews.png)
+## Result of Comics:
+![marvel_preview](data/marvel/comics/Marvel_Previews.png)
 
-![](docs/marvel/comics/MARVEL_KNIGHTS.png)
+![marvel_knights](data/marvel/comics/MARVEL_KNIGHTS.png)
 
-![](docs/marvel/comics/THE_WOMEN_OF_MARVEL.png)
+![marvel_women](data/marvel/comics/THE_WOMEN_OF_MARVEL.png)
 
 ## Contributors
 [@LauroSilveira](https://github.com/LauroSilveira)
