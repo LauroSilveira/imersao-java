@@ -38,9 +38,7 @@ public class StickerGeneratorNasa implements StickerGenerator {
       if (!directory.exists() && directory.mkdirs()) {
         log.warn("Directory NASA does not exist, it will be create!");
       }
-
-      InputStream inputStream = new URL(url).openStream();
-      BufferedImage originalImage = ImageIO.read(inputStream);
+      BufferedImage originalImage = ImageIO.read(new URL(url).openStream());
 
       int width = originalImage.getWidth();
       int height = originalImage.getHeight();

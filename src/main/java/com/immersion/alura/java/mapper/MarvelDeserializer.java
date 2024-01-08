@@ -36,7 +36,7 @@ public class MarvelDeserializer {
 
       return results;
     } catch (IOException e) {
-      throw new HttpRequestServiceException("MarvelDeserializer error to deserialize Commics object", e.getCause());
+      throw new HttpRequestServiceException("MarvelDeserializer error to deserialize Comics object", e.getCause());
     }
 
   }

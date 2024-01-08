@@ -61,7 +61,7 @@ public class StickerGeneratorIMDB implements StickerGenerator {
           .createGlyphVector(graphics.getFontRenderContext(), name);
       Shape shape = glyphVector.getOutline();
 
-      // activate anti aliasing for text rendering
+      // activate antialiasing for text rendering
       graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
           RenderingHints.VALUE_ANTIALIAS_ON);
       graphics.setRenderingHint(RenderingHints.KEY_RENDERING,

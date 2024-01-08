@@ -9,8 +9,9 @@ public enum EndpointsEnum {
     URL_TOP_250_MOVIES("api.imdb.url-top-250-movies", "API_KEY_IMDB", ""),
     URL_ASTRONOMIC_DAY_NASA("api.nasa.url.photo-astronomic-of-the-day", "API_KEY_NASA", ""),
     URL_MARVEL_CHARACTERS("api.marvel.url-characteres", "", ""),
-    URL_MARVEL_COMICS("api.marvel.url-comics", "", "");
+    URL_MARVEL_COMICS("api.marvel.url-comics", "", ""),
 
+    URL_PROGRAMMING_LANGUAGE_API("api.programming-language-api", "", "");
     private final String url;
     private final String apiKey;
     private final String endpoint;
