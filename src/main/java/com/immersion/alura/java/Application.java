@@ -37,7 +37,7 @@ public class Application {
 
     public static void main(String[] args) {
         final var httpClient = HttpClient.newHttpClient();
-    /*    log.info("Request to IMDB API to get Top 250 Movies");
+        log.info("Request to IMDB API to get Top 250 Movies");
         final var responseTopMovies = HttpRequestServiceIMDB.getInstance().getRequestIMDB(httpClient, URL_TOP_250_MOVIES.getEndpoint());
         final var top250Movies = jacksonParser.parseToJavaObject(responseTopMovies, Movies.class);
         processData.printResponseIMD(top250Movies);
@@ -69,8 +69,6 @@ public class Application {
         final String comicsResponse = HttpRequestServiceMarvel.getInstance().getMarvelRequest(httpClient, URL_MARVEL_COMICS.getUrl());
         final List<Result> comics = marvelDeserializer.deserialize(comicsResponse);
         comics.forEach(r -> stickerGeneratorMarvel.stickerGenerator(r.path(), r.name(), null, true));
-        */
-
 
         log.info("Request to API Rest Programming language...");
         String languagesJson = HttpRequestServiceIMDB.getInstance().getRequestIMDB(HttpClient.newHttpClient(), URL_PROGRAMMING_LANGUAGE_API.getUrl());

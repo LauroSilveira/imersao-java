@@ -18,7 +18,9 @@ import java.time.Instant;
 @Slf4j
 public class HttpRequestServiceMarvel {
 
-    public static final String URL = "%s?ts=%s&apikey=%s&hash=%s&limit=15";
+    private static final String URL = "%s?ts=%s&apikey=%s&hash=%s&limit=15";
+    private static final String PRIVATE_KEY_MARVEL = "PRIVATE_KEY_MARVEL";
+    private static final String PUBLIC_KEY_MARVEL = "PUBLIC_KEY_MARVEL";
 
     public static HttpRequestServiceMarvel getInstance() {
         return new HttpRequestServiceMarvel();
@@ -27,12 +29,9 @@ public class HttpRequestServiceMarvel {
     public String getMarvelRequest(HttpClient client, String request) {
         log.info("Request to Marvel API...");
         Timestamp timestamp = Timestamp.from(Instant.now());
-        final var publicKey = System.getenv("PUBLIC_KEY_MARVEL");
-        final var privateKey = System.getenv("PRIVATE_KEY_MARVEL");
-
-        var hashSHA256 = generateHashMD5(timestamp, privateKey, publicKey);
+        var hashSHA256 = generateHashMD5(timestamp, System.getenv(PRIVATE_KEY_MARVEL), System.getenv(PUBLIC_KEY_MARVEL));
         String uri = URL.formatted(request,
-                URLEncoder.encode(timestamp.toString(), StandardCharsets.UTF_8), publicKey, hashSHA256);
+                URLEncoder.encode(timestamp.toString(), StandardCharsets.UTF_8), System.getenv(PUBLIC_KEY_MARVEL), hashSHA256);
 
         try {
             //Http 2.0

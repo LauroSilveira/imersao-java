@@ -41,9 +41,7 @@ public class StickerGeneratorLanguages implements StickerGenerator {
             log.warn("Directory API Languages does not exist, it will be create!");
         }
         try {
-
-            InputStream inputStream = new URL(url).openStream();
-            BufferedImage originalImage = ImageIO.read(inputStream);
+            BufferedImage originalImage = ImageIO.read(new URL(url).openStream());
 
             int width = originalImage.getWidth();
             int height = originalImage.getHeight();
